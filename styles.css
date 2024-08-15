@@ -9,3 +9,16 @@ body {
 h1 {
     font-family: "quicksand";
 }
+
+h2 {
+    font-family: "quicksand";
+}
+
+.logo {
+    padding: 10px;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
