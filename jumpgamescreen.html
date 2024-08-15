@@ -1,27 +1,112 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Jump! - Pastime Games</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="sports_esports_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
-        <meta name="description" content="Play free games here in your browser.">
-        <meta name="robots" content="index, follow">
-        <meta name="keywords" content="online, browser, free, bored, pastime, pastimes, freegames, game, games, online games, jump">
-        <link rel="stylesheet" href="styles.css">
-        <link rel="preload" href="index.html" as="document">
-    </head>
-    <body>
-        <h2><a href="index.html">Back to home page</a></h2>
-        <h1>Jump</h1>
-        <div style="display: flex; flex-direction: column; width: 100%; background-color: rgba(0, 0, 0, 0.349); margin: 0; border-radius: 10px; margin-bottom: 10px;">
-            <h3 style="margin-left: 10px; margin-bottom: 0;">How to play</h3>
-            <ul style="list-style-type: none; margin-left: 10px; margin-top: 0; padding: 0; font-family: 'quicksand';">
-                <li>Press the play button</li>
-                <li>Press space to jump</li>
-                <li>If you touch the spikes, click anywhere to play again</li>
-            </ul>
-        </div>
-        <iframe src="Jump.html" style="width: 100%; margin: 0; border: none; height: calc(100vh - 275px); border-radius: 10px;"></iframe>
-    </body>
+<head>
+    <title>Jump! - Pastime Games</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="sports_esports_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg">
+    <meta name="description" content="Play free games here in your browser.">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="online, browser, free, bored, pastime, pastimes, freegames, game, games, online games, jump">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="index.html" as="document">
+    <style>
+        #fullscreenBtn, #exitFullscreenBtn {
+            margin: 10px;
+            padding: 10px 20px;
+            font-family: 'quicksand';
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        #exitFullscreenBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #exitFullscreenBtn.show {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h2><a href="index.html">Back to home page</a></h2>
+    <h1>Jump</h1>
+    <div style="display: flex; flex-direction: column; width: 100%; background-color: rgba(0, 0, 0, 0.349); margin: 0; border-radius: 10px; margin-bottom: 10px;">
+        <h3 style="margin-left: 10px; margin-bottom: 0;">How to play</h3>
+        <ul style="list-style-type: none; margin-left: 10px; margin-top: 0; padding: 0; font-family: 'quicksand';">
+            <li>Press the play button</li>
+            <li>Press space to jump</li>
+            <li>If you touch the spikes, click anywhere to play again</li>
+        </ul>
+    </div>
+    
+    <!-- Fullscreen button -->
+    <button id="fullscreenBtn">Fullscreen</button>
+    <!-- Exit Fullscreen button -->
+    <button id="exitFullscreenBtn">Exit Fullscreen</button>
+
+    <iframe id="gameFrame" src="Jump.html" style="width: 100%; margin: 0; border: none; height: calc(100vh - 275px); border-radius: 10px;"></iframe>
+
+    <!-- JavaScript for Fullscreen -->
+    <script>
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
+        const iframe = document.getElementById('gameFrame');
+        
+        // Fullscreen function
+        fullscreenBtn.addEventListener('click', function() {
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
+            iframe.style.borderRadius = '0'; // Remove rounded corners in fullscreen
+            exitFullscreenBtn.style.display = 'block'; // Show exit button
+        });
+
+        // Exit fullscreen function
+        exitFullscreenBtn.addEventListener('click', function() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+            iframe.style.borderRadius = '10px'; // Restore rounded corners after exiting fullscreen
+            exitFullscreenBtn.style.display = 'none'; // Hide exit button
+        });
+
+        // Auto-hide exit fullscreen button
+        let hideTimeout;
+        document.addEventListener('mousemove', function() {
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                clearTimeout(hideTimeout);
+                exitFullscreenBtn.classList.add('show');
+                hideTimeout = setTimeout(function() {
+                    exitFullscreenBtn.classList.remove('show');
+                }, 2000); // Hide after 2 seconds of inactivity
+            }
+        });
+
+        // Listen for fullscreen change events to hide exit button
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                exitFullscreenBtn.style.display = 'none'; // Hide exit button when exiting fullscreen
+                iframe.style.borderRadius = '10px'; // Restore rounded corners
+            }
+        });
+    </script>
+</body>
 </html>
