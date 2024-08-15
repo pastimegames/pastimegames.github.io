@@ -23,13 +23,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        #exitFullscreenBtn.show {
-            display: block;
-            opacity: 1;
+            display: none; /* Start hidden */
         }
     </style>
 </head>
@@ -61,16 +55,23 @@
         // Fullscreen function
         fullscreenBtn.addEventListener('click', function() {
             if (iframe.requestFullscreen) {
-                iframe.requestFullscreen();
+                iframe.requestFullscreen().then(() => {
+                    exitFullscreenBtn.style.display = 'block'; // Show exit button when entering fullscreen
+                });
             } else if (iframe.mozRequestFullScreen) { // Firefox
-                iframe.mozRequestFullScreen();
+                iframe.mozRequestFullScreen().then(() => {
+                    exitFullscreenBtn.style.display = 'block';
+                });
             } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-                iframe.webkitRequestFullscreen();
+                iframe.webkitRequestFullscreen().then(() => {
+                    exitFullscreenBtn.style.display = 'block';
+                });
             } else if (iframe.msRequestFullscreen) { // IE/Edge
-                iframe.msRequestFullscreen();
+                iframe.msRequestFullscreen().then(() => {
+                    exitFullscreenBtn.style.display = 'block';
+                });
             }
             iframe.style.borderRadius = '0'; // Remove rounded corners in fullscreen
-            exitFullscreenBtn.style.display = 'block'; // Show exit button
         });
 
         // Exit fullscreen function
@@ -85,28 +86,23 @@
                 document.msExitFullscreen();
             }
             iframe.style.borderRadius = '10px'; // Restore rounded corners after exiting fullscreen
-            exitFullscreenBtn.style.display = 'none'; // Hide exit button
+            exitFullscreenBtn.style.display = 'none'; // Hide exit button when exiting fullscreen
         });
 
-        // Auto-hide exit fullscreen button
-        let hideTimeout;
-        document.addEventListener('mousemove', function() {
+        // Fullscreen change event listener
+        function handleFullscreenChange() {
             if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-                clearTimeout(hideTimeout);
-                exitFullscreenBtn.classList.add('show');
-                hideTimeout = setTimeout(function() {
-                    exitFullscreenBtn.classList.remove('show');
-                }, 2000); // Hide after 2 seconds of inactivity
-            }
-        });
-
-        // Listen for fullscreen change events to hide exit button
-        document.addEventListener('fullscreenchange', function() {
-            if (!document.fullscreenElement) {
+                exitFullscreenBtn.style.display = 'block'; // Show exit button when entering fullscreen
+            } else {
                 exitFullscreenBtn.style.display = 'none'; // Hide exit button when exiting fullscreen
                 iframe.style.borderRadius = '10px'; // Restore rounded corners
             }
-        });
+        }
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari/Chrome
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange); // IE/Edge
     </script>
 </body>
 </html>
