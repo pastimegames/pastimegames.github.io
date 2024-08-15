@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&display=swap');
+
 body {
     background-image: linear-gradient(to bottom, #ffaa00, #00ffff);
     height: 100vh;
@@ -5,5 +7,5 @@ body {
 }
 
 h1 {
-    font-family: 
+    font-family: "quicksand";
 }
